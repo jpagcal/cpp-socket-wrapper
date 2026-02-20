@@ -1,11 +1,20 @@
 #include "../include/networking.hh"
 #include "../include/tcp.hh"
 #include <stdexcept>
+#include <sys/_types/_ssize_t.h>
 #include <sys/types.h>
 #include <netdb.h>
 #include <system_error>
+#include <unistd.h>
+#include <cstddef>
+#include <vector>
 
 namespace tcp {
+Connection::Connection(int socketFD) : socket_(socketFD) {}
+
+Connection::~Connection() {
+	close(this->socket_);
+}
 
 Connection Connection::resolve(const std::string host, const std::string service, const int domain) {
 	addrinfo hints, *res;
@@ -39,6 +48,28 @@ Connection Connection::resolve(const std::string host, const std::string service
 	freeaddrinfo(res);
 
 	return Connection(socketFD);
+}
+
+void Connection::sendAll(std::string_view msg) {
+	ssize_t total{};
+	ssize_t sent{};
+	ssize_t bytesLeft{ static_cast<ssize_t>(msg.size()) };
+
+	while (total < msg.size()) {
+		ssize_t sentThisIteration{ send(this->socket_, msg.data() + sent, bytesLeft, 0) };
+
+		if (sentThisIteration == -1) {
+
+		}
+
+		total += sentThisIteration;
+		bytesLeft -= sentThisIteration;
+	}
+
+}
+
+void Connection::recvAll() {
+
 }
 
 } // namespace tcp
