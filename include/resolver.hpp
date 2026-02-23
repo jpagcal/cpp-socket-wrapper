@@ -1,6 +1,6 @@
 #pragma once
 
-#include "endpoint.hpp"
+#include "endpoint_info.hpp"
 #include <cstdint>
 #include <netdb.h>
 #include <string>
@@ -16,7 +16,6 @@ struct ResolverHints {
 };
 
 addrinfo craft_resolver_hints(ResolverHints &hints);
-
 
 class Resolver {
 	using QueryResults = std::vector<AddressInfo>;

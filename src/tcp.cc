@@ -1,5 +1,6 @@
 #include "../include/networking.hh"
 #include "../include/tcp.hh"
+#include <memory>
 #include <stdexcept>
 #include <sys/_types/_ssize_t.h>
 #include <sys/types.h>
@@ -17,7 +18,8 @@ Connection::~Connection() {
 }
 
 Connection Connection::resolve(const std::string host, const std::string service, const int domain) {
-	addrinfo hints, *res;
+	addrinfo hints;
+	std::unique_ptr<addrinfo, >
 
 	// zero out hints
 	memset(&hints, 0, sizeof(addrinfo));
