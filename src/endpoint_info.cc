@@ -5,6 +5,7 @@
 #include <sys/_endian.h>
 #include <arpa/inet.h>
 #include <iostream>
+#include <sys/socket.h>
 
 inline namespace endpoint_info {
 	Address::Address(std::string &address, std::string &port) {
@@ -102,4 +103,35 @@ inline namespace endpoint_info {
 
 		std::cout << addr_buf << ":" << port << '\n';
 	}
+
+	void AddressInfo::string_repr() {
+		//TODO: finish implementation
+	}
+
+	int AddressInfo::domain() {
+		return this->raw_node_->ai_family;
+	}
+
+	int AddressInfo::socket_type() {
+		return this->raw_node_->ai_socktype;
+	}
+
+	int AddressInfo::protocol() {
+		return this->raw_node_->ai_protocol;
+	}
+
+	const addrinfo *const AddressInfo::c_addrinfo() {
+		return this->raw_node_;
+	}
+
+	int AddressInfo::create_socket() {
+		int socket_fd = socket(this->domain(), this->socket_type(), 0);
+
+		//TODO: error handling here
+	 	return socket_fd;
+	}
+
+
+
+
 }

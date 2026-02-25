@@ -27,14 +27,20 @@ private:
 class AddressInfo {
 public:
 	AddressInfo(addrinfo *raw_node) :
-		raw_node_{ raw_node }, // ni
-		canonical_name_{ raw_node->ai_canonname }, //ni
-	 	address_{ Address(raw_node->ai_addr) } {} //ni
+		raw_node_{ raw_node },
+	 	address_{ Address(raw_node->ai_addr) } {}
+
+	void string_repr();
+	int domain();
+	int socket_type();
+	int protocol();
+	const addrinfo *const c_addrinfo();
+	int create_socket();
 
 private:
-	addrinfo *raw_node_;
-	std::string canonical_name_;
-	Address address_;
+	const addrinfo *const raw_node_;
+	const Address address_;
+
 };
 
 } // namespace endpoint_info
