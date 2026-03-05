@@ -15,4 +15,66 @@ addrinfo craft_resolver_hints(ResolverHints &hints) {
 	return raw_hints;
 }
 
+Resolver::Resolver(std::string hostname, std::string service) {
+	addrinfo *res;
+
+	ResolverHints hints{};
+	addrinfo c_hints{ craft_resolver_hints(hints) };
+
+	int32_t getaddrinfo_status{};
+
+	if ((getaddrinfo_status = getaddrinfo(
+			hostname.c_str(),
+			service.c_str(),
+			&c_hints,
+			&res
+	))) {
+		// TODO: error handling here
+	}
+
+	conn_resolver::Resolver::QueryResults results{};
+
+	for (addrinfo *cur{ res }; cur->ai_next != nullptr; cur = cur->ai_next) {
+		results.emplace_back(AddressInfo(cur));
+	}
+
+	// dynamically allocated res linked list not needed at this point
+	freeaddrinfo(res);
+
+	query_results_ = results;
+}
+
+void Resolver::print_results() const {
+	for (const AddressInfo &node : this->query_results_) {
+		node.print_address_info();
+	}
+}
+
+Resolver::QueryResults Resolver::results() const {
+	return this->results();
+}
+
+Resolver::QueryResults Resolver::udp_nodes() const {
+	Resolver::QueryResults udp_nodes{};
+
+	for (const AddressInfo &node : this->query_results_) {
+		if (node.is_udp()) {
+			udp_nodes.emplace_back(node);
+		}
+	}
+
+	return udp_nodes;
+}
+
+Resolver::QueryResults Resolver::tcp_nodes() const {
+	Resolver::QueryResults tcp_nodes{};
+
+	for (const AddressInfo &node : this->query_results_) {
+		if (node.is_tcp()) {
+			tcp_nodes.emplace_back(node);
+		}
+	}
+
+	return tcp_nodes;
+}
 }
