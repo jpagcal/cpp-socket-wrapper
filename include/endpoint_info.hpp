@@ -29,6 +29,7 @@ private:
 
 class AddressInfo {
 public:
+	AddressInfo() = delete;
 	AddressInfo(addrinfo *raw_node) :
 	 	address_{ Address(raw_node->ai_addr) },
 		ip_domain_{raw_node->ai_family},

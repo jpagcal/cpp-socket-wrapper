@@ -23,10 +23,26 @@ add_executable(
 	./src/endpoint_info.cc
 )
 
+add_executable(
+	address_info_test
+	./tests/address_info_test.cc
+	./src/endpoint_info.cc
+)
+
 target_link_libraries (
 	address_test
 	GTest::gtest_main
 )
 
+target_link_libraries (
+	address_info_test
+	GTest::gtest_main
+)
+
 include(GoogleTest)
-gtest_discover_tests(address_test)
+gtest_discover_tests(
+	address_test
+)
+gtest_discover_tests(
+	address_info_test
+)
